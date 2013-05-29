@@ -1,0 +1,12 @@
+[submodule "ssh"]
+	path = ssh
+	url = https://github.com/gwdg/puppet-ssh.git
+[submodule "swift"]
+	path = swift
+	url = https://github.com/gwdg/puppetlabs-swift.git
+[submodule "memcached"]
+	path = memcached
+	url = https://github.com/gwdg/puppet-memcached.git
+[submodule "stdlib"]
+	path = stdlib
+	url = https://github.com/gwdg/puppetlabs-stdlib.git
