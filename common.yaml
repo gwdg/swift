@@ -1,0 +1,4 @@
+default_welcome_msg: - "Hello World! This is the swift custom puppet environment."
+swift_shared_secret: - "3986bc2eb55830f56dc31ecaa8a4227a"
+swift_zone: - "1"
+
