@@ -16,3 +16,6 @@
 [submodule "concat"]
 	path = concat
 	url = https://github.com/gwdg/puppet-concat.git
+[submodule "xinetd"]
+	path = xinetd
+	url = https://github.com/gwdg/puppetlabs-xinetd.git
