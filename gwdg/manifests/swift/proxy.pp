@@ -28,6 +28,7 @@ class gwdg::swift::proxy {
       'tempauth', # Anstatt keystone
       'proxy-server'
     ],
+    account_autocreate => true,
     # TODO where is the  ringbuilder class? -> inherit
     require            => Class['swift::ringbuilder'],
   }
@@ -39,6 +40,31 @@ class gwdg::swift::proxy {
 #  class {'swift::proxy::swift3': }
   class {'swift::proxy::tempauth': }
 
+#  class { 'swift::proxy::ratelimit':
+#    clock_accuracy         => 1000,
+#    max_sleep_time_seconds => 60,
+#    log_sleep_time_seconds => 0,
+#    rate_buffer_seconds    => 5,
+#    account_ratelimit      => 0
+#  }
+
+#  class { 'swift::proxy::s3token':
+#    # assume that the controller host is the swift api server
+#    auth_host     => $swift_keystone_node,
+#    auth_port     => '35357',
+#  }
+
+#  class { 'swift::proxy::keystone':
+#    operator_roles => ['admin', 'SwiftOperator'],
+#  }
+
+#  class { 'swift::proxy::authtoken':
+#    admin_user        => 'swift',
+#    admin_tenant_name => 'services',
+#    admin_password    => $swift_admin_password,
+#    # assume that the controller host is the swift api server
+#    auth_host         => $swift_keystone_node,
+#  }
 
   # collect all of the resources that are needed
   # to balance the ring
@@ -64,4 +90,11 @@ class gwdg::swift::proxy {
   @@swift::ringsync { ['account', 'object', 'container']:
    ring_server => $swift_local_net_ip
   }
+
+  # deploy a script that can be used for testing
+  class { 'swift::test_file':
+    auth_server => $swift_keystone_node,
+    password    => $swift_keystone_admin_password,
+  }
+
 }
