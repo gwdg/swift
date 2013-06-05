@@ -1,6 +1,7 @@
 class gwdg::swift::storage(
 	$zone 		= 1,
-	$weight		= 100
+	$weight		= 100,
+	$workers	= 8
 ) {
   
   include gwdg::swift::base
@@ -11,9 +12,9 @@ class gwdg::swift::storage(
   $swift_backend_ip	= $gwdg::swift::base::swift_backend_ip
 
   Swift::Storage::Server {
-    replicator_concurrency => '8', 
-    updater_concurrency    => '8',
-    reaper_concurrency     => '8',
+    replicator_concurrency => $workers, 
+    updater_concurrency    => $workers,
+    reaper_concurrency     => $workers,
   }
 
   # Use 2 loopback devices for testing
@@ -27,7 +28,7 @@ class gwdg::swift::storage(
     storage_local_net_ip => $swift_backend_ip
   }
    
-#  swift::storage::xfs { $device: #Reihenfolge zu swift::storage::all beachten? -> Anscheinend egal
+#  swift::storage::xfs { $device:
 #   require => Class['swift'];
 #  }
 
