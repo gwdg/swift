@@ -1,4 +1,5 @@
 class gwdg::swift::proxyserver(
+	$workers  = 8,
 	$pipeline = []
 ){
   
@@ -19,6 +20,7 @@ class gwdg::swift::proxyserver(
 
   # Specify swift proxy and all of its middlewares
   class { 'swift::proxy':
+    workers            => $workers,
     proxy_local_net_ip => $swift_frontend_ip,
     pipeline           => $pipeline,
     account_autocreate => true,
