@@ -1,19 +1,28 @@
-class gwdg::swift::base {
+class gwdg::swift::base(
+	$verbose       		= true,
+	$shared_secret 		= undef,
+	$packages      		= latest,
+	$frontend_interface	= "eth0",
+	$backend_interface	= "eth2"
+){
 
   Exec {
     logoutput => true,
   }
 
-  $swift_local_net_ip   = $ipaddress_eth1
-  $swift_verbose        = hiera('verbose', 'True')
+  # Get IPs dynamically from interfaces
+
+  $facter_frontend_interface	= "ipaddress_${frontend_interface}"
+  $facter_backend_interface 	= "ipaddress_${backend_interface}"
+
+  $swift_frontend_ip  		= inline_template('<%= scope.lookupvar(facter_frontend_interface) %>')
+  $swift_backend_ip		= inline_template('<%= scope.lookupvar(facter_backend_interface) %>')
 
   class { 'ssh::server::install': }
 
   class { 'swift':
-    # shared salt used when hashing ring mappings
-    swift_hash_suffix => hiera('swift_shared_secret'),
-    package_ensure    => latest
+    # Shared salt used when hashing ring mappings
+    swift_hash_suffix => $shared_secret, 
+    package_ensure    => $packages
   }
-
-
 }

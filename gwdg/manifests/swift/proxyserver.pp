@@ -1,8 +1,11 @@
-class gwdg::swift::proxyserver {
+class gwdg::swift::proxyserver(
+	$pipeline = []
+){
   
   include gwdg::swift::base
 
-  $swift_local_net_ip = $gwdg::swift::base::swift_local_net_ip
+  $swift_frontend_ip	= $gwdg::swift::base::swift_frontend_ip
+  $swift_backend_ip	= $gwdg::swift::base::swift_backend_ip
 
   # curl is only required for testing 
   package { 'curl':
@@ -16,18 +19,8 @@ class gwdg::swift::proxyserver {
 
   # Specify swift proxy and all of its middlewares
   class { 'swift::proxy':
-    proxy_local_net_ip => $swift_local_net_ip,
-    pipeline           => [
-      'catch_errors',
-      'healthcheck',
-      'cache',
-#      'ratelimit',
-#      'swift3',
-#      's3token',
-#      'authtoken',
-      'tempauth', # Anstatt keystone
-      'proxy-server'
-    ],
+    proxy_local_net_ip => $swift_frontend_ip,
+    pipeline           => $pipeline,
     account_autocreate => true,
     # TODO where is the  ringbuilder class? -> inherit
     require            => Class['swift::ringbuilder'],
@@ -83,12 +76,12 @@ class gwdg::swift::proxyserver {
 
   # sets up an rsync db that can be used to sync the ring DB
   class { 'swift::ringserver':
-    local_net_ip => $swift_local_net_ip,
+    local_net_ip => $swift_backend_ip,
   }
 
   # exports rsync gets that can be used to sync the ring files
   @@swift::ringsync { ['account', 'object', 'container']:
-   ring_server => $swift_local_net_ip
+    ring_server => $swift_backend_ip
   }
 
   # deploy a script that can be used for testing
