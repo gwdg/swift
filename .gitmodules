@@ -15,7 +15,7 @@
 	url = https://github.com/gwdg/puppetlabs-rsync.git
 [submodule "concat"]
 	path = concat
-	url = https://github.com/gwdg/puppet-concat.git
+url=https://github.com/gwdg/puppetlabs-concat.git
 [submodule "xinetd"]
 	path = xinetd
 	url = https://github.com/gwdg/puppetlabs-xinetd.git
